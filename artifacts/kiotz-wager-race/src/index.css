@@ -134,8 +134,8 @@ body {
 }
 
 .section {
-  padding-top: calc(var(--nav-h) + 72px);
-  padding-bottom: 80px;
+  padding-top: calc(var(--nav-h) + 36px);
+  padding-bottom: 48px;
   padding-left: 32px;
   padding-right: 32px;
   max-width: 1200px;
@@ -144,7 +144,6 @@ body {
 
 /* ─── HOME ────────────────────────────────────────────────────────── */
 .home-section {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -153,9 +152,9 @@ body {
 .home-inner {
   display: grid;
   grid-template-columns: 1fr 400px;
-  gap: 60px;
+  gap: 40px;
   align-items: center;
-  margin-bottom: 64px;
+  margin-bottom: 32px;
 }
 
 .home-tag {
@@ -168,11 +167,11 @@ body {
 }
 
 .home-title {
-  font-size: clamp(56px, 7vw, 96px);
+  font-size: clamp(44px, 5.5vw, 72px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -1px;
-  margin-bottom: 24px;
+  margin-bottom: 14px;
   color: #fff;
 }
 
@@ -181,11 +180,11 @@ body {
 }
 
 .home-desc {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--text-muted);
   max-width: 480px;
-  line-height: 1.7;
-  margin-bottom: 36px;
+  line-height: 1.6;
+  margin-bottom: 20px;
 }
 
 .stake-link {
@@ -310,7 +309,7 @@ body {
 
 /* Countdown */
 .countdown-wrap {
-  padding-top: 48px;
+  padding-top: 28px;
 }
 
 .countdown-label {
@@ -367,12 +366,10 @@ body {
 }
 
 /* ─── LEADERBOARD ─────────────────────────────────────────────────── */
-.lb-section {
-  min-height: 100vh;
-}
+.lb-section {}
 
 .lb-table-wrap {
-  margin-top: 40px;
+  margin-top: 24px;
 }
 
 .section-head {
