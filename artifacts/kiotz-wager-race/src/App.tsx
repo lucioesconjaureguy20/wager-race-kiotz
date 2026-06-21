@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 function TrophyIcon({ color, size = 48 }: { color: string; size?: number }) {
   return (
@@ -23,45 +23,85 @@ const PRIZES: Record<number, number> = {
 const PAGE_SIZE = 10;
 const TOTAL_PAGES = 10;
 
-// Generate 100 fake players with realistic wager amounts
-// Reference: rank 1 ~$9,200 → rank 100 ~$22, smooth exponential decay with small jitter
-function generatePlayers() {
-  const prefixes = ["xX", "Dark", "Shadow", "Night", "Crypto", "Lucky", "Gold", "Wild", "Royal", "Steel",
-    "Ghost", "Fire", "Ice", "Storm", "Blade", "Neon", "Ace", "Pro", "Ultra", "Hyper"];
-  const words = ["Slayer", "Hunter", "Falcon", "King", "Dragon", "Phoenix", "Wolf", "Tiger", "Eagle", "Shark",
-    "Raider", "Punter", "Staker", "Roller", "Spinner", "Crusher", "Blaster", "Runner", "Rider", "Drifter"];
-  const suffixes = ["99", "88", "77", "420", "21", "69", "55", "33", "47", "11",
-    "_YT", "_TV", "_GG", "_Pro", "XX", "007", "42", "13", "666", "100"];
-
-  const names: string[] = [];
-  const used = new Set<string>();
-  let idx = 0;
-  while (names.length < 100) {
-    const p = prefixes[idx % prefixes.length];
-    const w = words[Math.floor(idx / prefixes.length) % words.length];
-    const s = suffixes[idx % suffixes.length];
-    const name = idx % 5 === 0 ? `xX_${w}${s}_Xx` : `${p}${w}${s}`;
-    if (!used.has(name)) { used.add(name); names.push(name); }
-    idx++;
-  }
-
-  // Rank 1 ≈ $9,200 · Rank 100 ≈ $22 — matches reference leaderboard distribution
-  const TOP = 9200;
-  const DECAY = 0.942;
-  return names.map((name, i) => {
-    const base = TOP * Math.pow(DECAY, i);
-    // small irregular jitter like real data (±4%)
-    const jitter = 1 + (Math.sin(i * 13.7 + 2.3) * 0.04);
-    const wagered = Math.round(base * jitter * 100) / 100;
-    return { name, wagered };
-  });
+// ─── Seeded RNG ───────────────────────────────────────────────────────────────
+function makeRng(seed: number) {
+  let s = ((seed ^ 0xcafebabe) >>> 0) || 1;
+  return () => {
+    s = (Math.imul(1664525, s) + 1013904223) >>> 0;
+    return s / 0x100000000;
+  };
 }
 
-const ALL_PLAYERS = generatePlayers();
+// ─── Race config ──────────────────────────────────────────────────────────────
+const RACE_START_MS = new Date("2026-06-01T00:00:00Z").getTime();
+const RACE_END = new Date("2026-07-01T00:00:00Z");
 
-const RACE_END = new Date();
-RACE_END.setDate(RACE_END.getDate() + 6);
-RACE_END.setHours(23, 59, 59, 0);
+// Real wager targets per rank — same distribution as reference leaderboard
+const RANK_TARGETS: number[] = [
+  455_000, 436_500, 397_500,
+  126_112, 42_971, 37_121, 25_183, 17_618,
+   14_655, 14_581,  9_719,  9_389,  6_908,
+    6_776,  6_561,  4_890,  4_651,  3_426,
+    3_379,  3_280,  3_271,  3_162,  2_999,
+    2_940,  2_508,  2_239,  1_958,  1_911,
+  1_790, 1_668, 1_547,
+  1_426, 1_397, 1_382, 1_326, 1_248,
+  1_221, 1_205, 1_101, 1_046,   960,
+    782,   774,   733,   639,   617,
+    603,   574,   557,   549,   513,
+    488,   485,   431,   423,   402, 352,
+  ...Array.from({ length: 43 }, (_, i) => Math.round(352 * Math.pow(0.9477, i + 1))),
+];
+
+const TICK_MS = 5 * 60 * 1000;
+const PLAYER_OFFSETS: number[] = Array.from({ length: 100 }, (_, i) => {
+  const rng = makeRng(i * 2023 + 55);
+  return Math.floor(rng() * 300) * 1000;
+});
+
+function computeWager(rank: number, nowMs: number): number {
+  const target = RANK_TARGETS[rank - 1] ?? 50_000;
+  const rng = makeRng(rank * 77_777);
+  const avgDaily = target / 22.5;
+
+  const elapsedMs = Math.max(0, nowMs - RACE_START_MS);
+  const daysFull = Math.min(Math.floor(elapsedMs / 86_400_000), 30);
+
+  let total = 0;
+  for (let d = 0; d < daysFull; d++) {
+    const played = rng() > 0.25;
+    const v = rng();
+    if (played) total += avgDaily * (0.3 + v * 1.4);
+  }
+
+  const offsetMs = PLAYER_OFFSETS[rank - 1];
+  const todayMs = elapsedMs % 86_400_000;
+  const adjustedMs = Math.max(0, todayMs - offsetMs);
+  const ticks = Math.floor(adjustedMs / TICK_MS);
+  const isActive = rng() > 0.3;
+  const todayV = rng();
+  if (isActive && daysFull < 30 && ticks > 0) {
+    const ticksPerDay = 86_400_000 / TICK_MS;
+    const tickRate = (avgDaily * (0.4 + todayV * 1.2)) / ticksPerDay;
+    total += ticks * tickRate;
+  }
+
+  return Math.max(0, Math.round(total * 100) / 100);
+}
+
+// Fixed masked player names for 100 slots
+const PLAYER_NAMES: string[] = [
+  "K9**","ic*******","To****","Lu******","Di*****","Fu***","Si*****","Mo******","Ri****","Ka*******",
+  "Ja***","Ma*****","Ty******","Br***","Co*****","Xe******","Na****","El*******","Zo***","Da*****",
+  "Re******","Sl****","Vi*****","De*******","Ha***","Ni*****","Ky******","Sa*****","Ax*******","No***",
+  "Le*****","Fe******","Gu****","Bl*******","Ce*****","Tr***","Ve******","Mi*****","Ra****","Jo*******",
+  "Pe***","Be*****","Fl******","Gh****","Hu*****","Ig*******","Je***","Kr*****","Me****","Ob*****",
+  "Pr*******","Qu***","Ro*****","St******","Ta****","Ud*****","Wa*******","Xe***","Ya*****","Ze******",
+  "Al****","Ba*******","Ca***","Do*****","Em******","Fa****","Gi*****","He*******","Ir***","Jy*****",
+  "Ki******","Lo****","Mu*****","Ne*******","Or***","Pa*****","Ru****","Sk*****","Ti*******","Ur***",
+  "Vo*****","Wi******","Xy****","Yu*****","Zi*******","Ab***","Bo*****","Cy******","Du****","Ev*****",
+  "Fi*******","Gr***","Ho*****","In******","Jk****","Kl*****","Lx*******","Ny***","Ox****","Pz*****",
+];
 
 function useCountdown(target: Date) {
   const [t, setT] = useState({ d: 0, h: 0, m: 0, s: 0 });
@@ -101,6 +141,7 @@ type Section = "Home" | "Leaderboard" | "Rules";
 export default function App() {
   const [active, setActive] = useState<Section>("Home");
   const [page, setPage] = useState(1);
+  const [nowMs, setNowMs] = useState(() => Date.now());
   const { d, h, m, s } = useCountdown(RACE_END);
 
   const homeRef = useRef<HTMLDivElement>(null);
@@ -110,6 +151,11 @@ export default function App() {
   const refs: Record<Section, React.RefObject<HTMLDivElement | null>> = {
     Home: homeRef, Leaderboard: lbRef, Rules: rulesRef,
   };
+
+  useEffect(() => {
+    const id = setInterval(() => setNowMs(Date.now()), 30_000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -131,9 +177,14 @@ export default function App() {
     refs[section].current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const top3 = ALL_PLAYERS.slice(0, 3);
+  const allPlayers = useMemo(() =>
+    PLAYER_NAMES.map((name, i) => ({ name, wagered: computeWager(i + 1, nowMs) })),
+    [nowMs]
+  );
+
+  const top3 = [allPlayers[0], allPlayers[1], allPlayers[2]];
   const pageStart = (page - 1) * PAGE_SIZE;
-  const pageRows = ALL_PLAYERS.slice(pageStart, pageStart + PAGE_SIZE);
+  const pageRows = allPlayers.slice(pageStart, pageStart + PAGE_SIZE);
 
   return (
     <div className="root">
@@ -292,7 +343,7 @@ export default function App() {
           {/* Pagination */}
           <div className="pagination">
             <span className="pagination-info">
-              Page {page} of {TOTAL_PAGES} · {ALL_PLAYERS.length} players
+              Page {page} of {TOTAL_PAGES} · {PLAYER_NAMES.length} players
             </span>
             <div className="pagination-btns">
               <button
