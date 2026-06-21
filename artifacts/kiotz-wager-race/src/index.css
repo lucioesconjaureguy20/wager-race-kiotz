@@ -310,7 +310,6 @@ body {
 
 /* Countdown */
 .countdown-wrap {
-  border-top: 1px solid var(--border);
   padding-top: 48px;
 }
 
