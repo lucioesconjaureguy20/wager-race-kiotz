@@ -368,7 +368,6 @@ body {
 
 /* ─── LEADERBOARD ─────────────────────────────────────────────────── */
 .lb-section {
-  border-top: 1px solid var(--border);
   min-height: 100vh;
 }
 
