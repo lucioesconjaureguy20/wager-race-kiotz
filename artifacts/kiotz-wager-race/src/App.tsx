@@ -24,6 +24,7 @@ const PAGE_SIZE = 10;
 const TOTAL_PAGES = 10;
 
 // Generate 100 fake players with realistic wager amounts
+// Reference: rank 1 ~$9,200 → rank 100 ~$22, smooth exponential decay with small jitter
 function generatePlayers() {
   const prefixes = ["xX", "Dark", "Shadow", "Night", "Crypto", "Lucky", "Gold", "Wild", "Royal", "Steel",
     "Ghost", "Fire", "Ice", "Storm", "Blade", "Neon", "Ace", "Pro", "Ultra", "Hyper"];
@@ -44,10 +45,13 @@ function generatePlayers() {
     idx++;
   }
 
-  // Wager amounts: exponential decay from ~280K down to ~420
+  // Rank 1 ≈ $9,200 · Rank 100 ≈ $22 — matches reference leaderboard distribution
+  const TOP = 9200;
+  const DECAY = 0.942;
   return names.map((name, i) => {
-    const base = 280000 * Math.pow(0.93, i);
-    const jitter = 1 + (Math.sin(i * 7.3) * 0.06);
+    const base = TOP * Math.pow(DECAY, i);
+    // small irregular jitter like real data (±4%)
+    const jitter = 1 + (Math.sin(i * 13.7 + 2.3) * 0.04);
     const wagered = Math.round(base * jitter * 100) / 100;
     return { name, wagered };
   });
