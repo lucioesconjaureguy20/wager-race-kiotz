@@ -15,20 +15,45 @@ const TROPHY_COLORS: Record<number, string> = {
   3: "#A0694A",
 };
 
-const PRIZES = [2500, 1500, 800, 500, 300, 200, 100, 50, 30, 20];
+const PRIZES: Record<number, number> = {
+  1: 2500, 2: 1500, 3: 800, 4: 500, 5: 300,
+  6: 200, 7: 100, 8: 50, 9: 30, 10: 20,
+};
 
-const PLAYERS = [
-  { name: "xX_ShadowBet_Xx", wagered: 247832.5 },
-  { name: "NightFalcon99", wagered: 198441.2 },
-  { name: "DragonSlayer47", wagered: 156723.8 },
-  { name: "CryptoKing88", wagered: 132059.1 },
-  { name: "VipWagger420", wagered: 98441.6 },
-  { name: "LuckyAce77", wagered: 76320.4 },
-  { name: "RocketBet21", wagered: 54819.7 },
-  { name: "GoldRush555", wagered: 41203.3 },
-  { name: "DarkHorse69", wagered: 28541.9 },
-  { name: "WildCard33", wagered: 17882.2 },
-];
+const PAGE_SIZE = 10;
+const TOTAL_PAGES = 10;
+
+// Generate 100 fake players with realistic wager amounts
+function generatePlayers() {
+  const prefixes = ["xX", "Dark", "Shadow", "Night", "Crypto", "Lucky", "Gold", "Wild", "Royal", "Steel",
+    "Ghost", "Fire", "Ice", "Storm", "Blade", "Neon", "Ace", "Pro", "Ultra", "Hyper"];
+  const words = ["Slayer", "Hunter", "Falcon", "King", "Dragon", "Phoenix", "Wolf", "Tiger", "Eagle", "Shark",
+    "Raider", "Punter", "Staker", "Roller", "Spinner", "Crusher", "Blaster", "Runner", "Rider", "Drifter"];
+  const suffixes = ["99", "88", "77", "420", "21", "69", "55", "33", "47", "11",
+    "_YT", "_TV", "_GG", "_Pro", "XX", "007", "42", "13", "666", "100"];
+
+  const names: string[] = [];
+  const used = new Set<string>();
+  let idx = 0;
+  while (names.length < 100) {
+    const p = prefixes[idx % prefixes.length];
+    const w = words[Math.floor(idx / prefixes.length) % words.length];
+    const s = suffixes[idx % suffixes.length];
+    const name = idx % 5 === 0 ? `xX_${w}${s}_Xx` : `${p}${w}${s}`;
+    if (!used.has(name)) { used.add(name); names.push(name); }
+    idx++;
+  }
+
+  // Wager amounts: exponential decay from ~280K down to ~420
+  return names.map((name, i) => {
+    const base = 280000 * Math.pow(0.93, i);
+    const jitter = 1 + (Math.sin(i * 7.3) * 0.06);
+    const wagered = Math.round(base * jitter * 100) / 100;
+    return { name, wagered };
+  });
+}
+
+const ALL_PLAYERS = generatePlayers();
 
 const RACE_END = new Date();
 RACE_END.setDate(RACE_END.getDate() + 6);
@@ -63,17 +88,15 @@ function maskName(name: string) {
 }
 
 function fmtWager(n: number) {
-  if (n >= 1000000) return `$${(n / 1000000).toFixed(2)}M`;
-  if (n >= 1000) return `$${(n / 1000).toFixed(1)}K`;
-  return `$${n.toFixed(2)}`;
+  return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 const NAV_ITEMS = ["Home", "Leaderboard", "Rules"];
-
 type Section = "Home" | "Leaderboard" | "Rules";
 
 export default function App() {
   const [active, setActive] = useState<Section>("Home");
+  const [page, setPage] = useState(1);
   const { d, h, m, s } = useCountdown(RACE_END);
 
   const homeRef = useRef<HTMLDivElement>(null);
@@ -81,9 +104,7 @@ export default function App() {
   const rulesRef = useRef<HTMLDivElement>(null);
 
   const refs: Record<Section, React.RefObject<HTMLDivElement | null>> = {
-    Home: homeRef,
-    Leaderboard: lbRef,
-    Rules: rulesRef,
+    Home: homeRef, Leaderboard: lbRef, Rules: rulesRef,
   };
 
   useEffect(() => {
@@ -96,7 +117,7 @@ export default function App() {
           }
         });
       },
-      { threshold: 0.4 }
+      { threshold: 0.3 }
     );
     [homeRef, lbRef, rulesRef].forEach((r) => r.current && observer.observe(r.current));
     return () => observer.disconnect();
@@ -105,6 +126,10 @@ export default function App() {
   const scrollTo = (section: Section) => {
     refs[section].current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  const top3 = ALL_PLAYERS.slice(0, 3);
+  const pageStart = (page - 1) * PAGE_SIZE;
+  const pageRows = ALL_PLAYERS.slice(pageStart, pageStart + PAGE_SIZE);
 
   return (
     <div className="root">
@@ -127,12 +152,7 @@ export default function App() {
               </li>
             ))}
           </ul>
-          <a
-            href="https://stake.com/?c=KIOTZ9"
-            target="_blank"
-            rel="noreferrer"
-            className="nav-cta"
-          >
+          <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer" className="nav-cta">
             Play on Stake
           </a>
         </div>
@@ -188,16 +208,10 @@ export default function App() {
           </div>
         </div>
 
-        {/* COUNTDOWN */}
         <div className="countdown-wrap">
           <div className="countdown-label">RACE ENDS IN</div>
           <div className="countdown">
-            {[
-              { v: d, l: "Days" },
-              { v: h, l: "Hours" },
-              { v: m, l: "Min" },
-              { v: s, l: "Sec" },
-            ].map(({ v, l }, i) => (
+            {[{ v: d, l: "Days" }, { v: h, l: "Hours" }, { v: m, l: "Min" }, { v: s, l: "Sec" }].map(({ v, l }, i) => (
               <div key={l} className="cd-group">
                 <div className="cd-block">
                   <span className="cd-num">{pad(v)}</span>
@@ -219,52 +233,50 @@ export default function App() {
           </div>
         </div>
 
-        {/* Top 3 podium cards — above the table */}
+        {/* Top 3 podium */}
         <div className="podium">
           {[1, 0, 2].map((idx) => {
             const rank = idx + 1;
-            const p = PLAYERS[idx];
+            const p = top3[idx];
             const labels = ["", "1st", "2nd", "3rd"];
             const color = TROPHY_COLORS[rank];
             return (
-              <div key={rank} className={`podium-card podium-card--${rank}`} style={{ borderColor: `${color}22` }}>
+              <div key={rank} className={`podium-card podium-card--${rank}`} style={{ borderColor: `${color}28` }}>
                 <TrophyIcon color={color} size={52} />
                 <div className="podium-rank" style={{ color }}>{labels[rank]}</div>
                 <div className="podium-name">{maskName(p.name)}</div>
                 <div className="podium-wager">{fmtWager(p.wagered)}</div>
                 <div className="podium-prize" style={{ color }}>
-                  ${PRIZES[idx].toLocaleString()}
+                  ${PRIZES[rank].toLocaleString()}
                 </div>
               </div>
             );
           })}
         </div>
 
+        {/* Full table */}
         <div className="lb-table-wrap">
           <table className="lb-table">
             <thead>
               <tr>
-                <th style={{ width: 60 }}>Rank</th>
+                <th style={{ width: 56 }}>Rank</th>
                 <th>Player</th>
                 <th className="align-right">Wagered</th>
                 <th className="align-right">Prize</th>
               </tr>
             </thead>
             <tbody>
-              {PLAYERS.map((p, i) => {
-                const rank = i + 1;
+              {pageRows.map((p, i) => {
+                const rank = pageStart + i + 1;
+                const prize = PRIZES[rank];
                 return (
                   <tr key={p.name} className="lb-row">
-                    <td>
-                      <span className="rank-num">{rank}</span>
-                    </td>
-                    <td>
-                      <span className="player-name">{maskName(p.name)}</span>
-                    </td>
+                    <td><span className="rank-num">{rank}</span></td>
+                    <td><span className="player-name">{maskName(p.name)}</span></td>
                     <td className="align-right wagered-amt">{fmtWager(p.wagered)}</td>
                     <td className="align-right">
-                      <span className="prize-amt">
-                        ${PRIZES[i].toLocaleString()}
+                      <span className={`prize-amt${prize ? " prize-winner" : ""}`}>
+                        {prize ? `$${prize.toLocaleString()}` : "—"}
                       </span>
                     </td>
                   </tr>
@@ -272,6 +284,29 @@ export default function App() {
               })}
             </tbody>
           </table>
+
+          {/* Pagination */}
+          <div className="pagination">
+            <span className="pagination-info">
+              Page {page} of {TOTAL_PAGES} · {ALL_PLAYERS.length} players
+            </span>
+            <div className="pagination-btns">
+              <button
+                className="page-btn"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
+                ← Prev
+              </button>
+              <button
+                className="page-btn"
+                onClick={() => setPage((p) => Math.min(TOTAL_PAGES, p + 1))}
+                disabled={page === TOTAL_PAGES}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -333,9 +368,7 @@ export default function App() {
             <a href="https://kick.com/kiotz9" target="_blank" rel="noreferrer">Kick</a>
             <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer">Stake</a>
           </div>
-          <p className="footer-disclaimer">
-            Gambling involves risk. Play responsibly. 18+ only.
-          </p>
+          <p className="footer-disclaimer">Gambling involves risk. Play responsibly. 18+ only.</p>
         </div>
       </footer>
     </div>
