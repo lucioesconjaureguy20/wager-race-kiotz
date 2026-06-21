@@ -98,7 +98,7 @@ export default function App() {
         <div className="nav-inner">
           <div className="nav-brand" onClick={() => scrollTo("Home")}>
             <img src="/logo.png" alt="Kiotz" className="nav-logo" />
-            <span className="nav-name">KIOTZ</span>
+            <span className="nav-name">KIOTZ9</span>
           </div>
           <ul className="nav-links">
             {NAV_ITEMS.map((item) => (
@@ -113,7 +113,7 @@ export default function App() {
             ))}
           </ul>
           <a
-            href="https://stake.com/?c=KIOTZ"
+            href="https://stake.com/?c=KIOTZ9"
             target="_blank"
             rel="noreferrer"
             className="nav-cta"
@@ -134,15 +134,15 @@ export default function App() {
             </h1>
             <p className="home-desc">
               Wager on{" "}
-              <a href="https://stake.com/?c=KIOTZ" target="_blank" rel="noreferrer" className="stake-link">
+              <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer" className="stake-link">
                 Stake
               </a>{" "}
               using code{" "}
-              <span className="code-tag">KIOTZ</span>{" "}
+              <span className="code-tag">KIOTZ9</span>{" "}
               and climb the leaderboard to win your share of the prize pool.
             </p>
             <div className="home-actions">
-              <a href="https://stake.com/?c=KIOTZ" target="_blank" rel="noreferrer" className="btn-primary">
+              <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer" className="btn-primary">
                 Register on Stake
               </a>
               <button className="btn-ghost" onClick={() => scrollTo("Leaderboard")}>
@@ -162,7 +162,7 @@ export default function App() {
                 </div>
                 <div className="prize-meta-item">
                   <span className="prize-meta-label">Code</span>
-                  <span className="prize-meta-val accent">KIOTZ</span>
+                  <span className="prize-meta-val accent">KIOTZ9</span>
                 </div>
                 <div className="prize-meta-item">
                   <span className="prize-meta-label">Winners</span>
@@ -268,7 +268,7 @@ export default function App() {
             <div className="rule-num">01</div>
             <h3 className="rule-title">Sign Up</h3>
             <p className="rule-text">
-              Register on Stake using the code <span className="code-tag">KIOTZ</span>. Only players with a valid referral code are eligible.
+              Register on Stake using the code <span className="code-tag">KIOTZ9</span>. Only players with a valid referral code are eligible.
             </p>
           </div>
           <div className="rule-card">
@@ -310,11 +310,11 @@ export default function App() {
         <div className="footer-inner">
           <div className="footer-brand">
             <img src="/logo.png" alt="Kiotz" className="footer-logo" />
-            <span className="footer-name">KIOTZ</span>
+            <span className="footer-name">KIOTZ9</span>
           </div>
           <div className="footer-links">
-            <a href="https://kick.com/kiotz" target="_blank" rel="noreferrer">Kick</a>
-            <a href="https://stake.com/?c=KIOTZ" target="_blank" rel="noreferrer">Stake</a>
+            <a href="https://kick.com/kiotz9" target="_blank" rel="noreferrer">Kick</a>
+            <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer">Stake</a>
           </div>
           <p className="footer-disclaimer">
             Gambling involves risk. Play responsibly. 18+ only.
