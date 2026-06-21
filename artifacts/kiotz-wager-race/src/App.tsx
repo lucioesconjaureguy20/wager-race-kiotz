@@ -42,6 +42,11 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
+function maskName(name: string) {
+  if (name.length <= 2) return name;
+  return name.slice(0, 2) + "*".repeat(Math.max(4, name.length - 2));
+}
+
 function fmtWager(n: number) {
   if (n >= 1000000) return `$${(n / 1000000).toFixed(2)}M`;
   if (n >= 1000) return `$${(n / 1000).toFixed(1)}K`;
@@ -197,10 +202,6 @@ export default function App() {
             <h2 className="section-title">Leaderboard</h2>
             <p className="section-sub">Updated in real time · June 2026</p>
           </div>
-          <span className="live-badge">
-            <span className="live-dot" />
-            Live
-          </span>
         </div>
 
         <div className="lb-table-wrap">
@@ -217,18 +218,16 @@ export default function App() {
               {PLAYERS.map((p, i) => {
                 const rank = i + 1;
                 return (
-                  <tr key={p.name} className={`lb-row rank-${rank <= 3 ? rank : "other"}`}>
+                  <tr key={p.name} className="lb-row">
                     <td>
-                      <span className={`rank-num rank-num--${rank <= 3 ? rank : "other"}`}>
-                        {rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : rank}
-                      </span>
+                      <span className="rank-num">{rank}</span>
                     </td>
                     <td>
-                      <span className="player-name">{p.name}</span>
+                      <span className="player-name">{maskName(p.name)}</span>
                     </td>
                     <td className="align-right wagered-amt">{fmtWager(p.wagered)}</td>
                     <td className="align-right">
-                      <span className={`prize-amt${rank <= 3 ? " prize-top" : ""}`}>
+                      <span className="prize-amt">
                         ${PRIZES[i].toLocaleString()}
                       </span>
                     </td>
@@ -245,13 +244,12 @@ export default function App() {
             const rank = idx + 1;
             const p = PLAYERS[idx];
             const labels = ["", "1st", "2nd", "3rd"];
-            const colors = ["", "#f5c518", "#adb5bd", "#cd7f32"];
             return (
-              <div key={rank} className={`podium-card podium-card--${rank} ${idx === 0 ? "podium-card--winner" : ""}`}>
-                <div className="podium-rank" style={{ color: colors[rank] }}>{labels[rank]}</div>
-                <div className="podium-name">{p.name}</div>
+              <div key={rank} className={`podium-card podium-card--${rank}`}>
+                <div className="podium-rank">{labels[rank]}</div>
+                <div className="podium-name">{maskName(p.name)}</div>
                 <div className="podium-wager">{fmtWager(p.wagered)}</div>
-                <div className="podium-prize" style={{ color: colors[rank] }}>
+                <div className="podium-prize">
                   ${PRIZES[idx].toLocaleString()}
                 </div>
               </div>

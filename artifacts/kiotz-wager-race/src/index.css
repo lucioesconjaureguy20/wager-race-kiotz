@@ -471,20 +471,12 @@ body {
   background: var(--surface-2);
 }
 
-.lb-row.rank-1 td { background: rgba(245, 197, 24, 0.04); }
-.lb-row.rank-2 td { background: rgba(173, 181, 189, 0.03); }
-.lb-row.rank-3 td { background: rgba(205, 127, 50, 0.03); }
-
 .rank-num {
-  font-size: 18px;
-  display: inline-block;
-  min-width: 32px;
-}
-
-.rank-num--other {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-muted);
+  display: inline-block;
+  min-width: 32px;
 }
 
 .player-name {
@@ -503,10 +495,6 @@ body {
   font-size: 15px;
   font-weight: 600;
   color: var(--text-muted);
-}
-
-.prize-amt.prize-top {
-  color: var(--green);
 }
 
 /* Podium */
@@ -529,7 +517,6 @@ body {
 .podium-card--1 {
   order: 2;
   padding-top: 32px;
-  border-color: rgba(245, 197, 24, 0.2);
 }
 
 .podium-card--2 {
@@ -546,7 +533,7 @@ body {
   letter-spacing: 1px;
   text-transform: uppercase;
   margin-bottom: 10px;
-  opacity: 0.8;
+  color: var(--text-muted);
 }
 
 .podium-name {
@@ -566,6 +553,7 @@ body {
 .podium-prize {
   font-size: 22px;
   font-weight: 700;
+  color: var(--text);
 }
 
 /* ─── RULES ───────────────────────────────────────────────────────── */
