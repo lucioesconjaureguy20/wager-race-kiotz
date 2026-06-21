@@ -134,8 +134,9 @@ body {
 }
 
 .section {
-  padding-top: calc(var(--nav-h) + 36px);
-  padding-bottom: 48px;
+  scroll-margin-top: var(--nav-h);
+  padding-top: 16px;
+  padding-bottom: 16px;
   padding-left: 32px;
   padding-right: 32px;
   max-width: 1200px;
