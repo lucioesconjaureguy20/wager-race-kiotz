@@ -208,7 +208,7 @@ export default function App() {
             ))}
           </ul>
           <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer" className="nav-cta">
-            Play on Stake
+            Play on Jack
           </a>
         </div>
       </nav>
@@ -224,8 +224,8 @@ export default function App() {
             </h1>
             <p className="home-desc">
               Wager on{" "}
-              <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer" className="stake-link">
-                Stake
+              <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer" className="jack-link">
+                Jack
               </a>{" "}
               using code{" "}
               <span className="code-tag">KIOTZ9</span>{" "}
@@ -233,7 +233,7 @@ export default function App() {
             </p>
             <div className="home-actions">
               <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer" className="btn-primary">
-                Register on Stake
+                Register on Jack
               </a>
               <button className="btn-ghost" onClick={() => scrollTo("Leaderboard")}>
                 View Leaderboard →
@@ -248,7 +248,7 @@ export default function App() {
               <div className="prize-card-meta">
                 <div className="prize-meta-item">
                   <span className="prize-meta-label">Casino</span>
-                  <span className="prize-meta-val">Stake</span>
+                  <span className="prize-meta-val">Jack</span>
                 </div>
                 <div className="prize-meta-item">
                   <span className="prize-meta-label">Code</span>
@@ -381,14 +381,14 @@ export default function App() {
             <div className="rule-num">01</div>
             <h3 className="rule-title">Sign Up</h3>
             <p className="rule-text">
-              Register on Stake using the code <span className="code-tag">KIOTZ9</span>. Only players with a valid referral code are eligible.
+              Register on Jack using the code <span className="code-tag">KIOTZ9</span>. Only players with a valid referral code are eligible.
             </p>
           </div>
           <div className="rule-card">
             <div className="rule-num">02</div>
             <h3 className="rule-title">Wager</h3>
             <p className="rule-text">
-              Place bets on any casino game on Stake — slots, live casino, or Stake originals. Sports bets do not count.
+              Place bets on any casino game on Jack — slots, live casino, or Jack originals. Sports bets do not count.
             </p>
           </div>
           <div className="rule-card">
@@ -412,7 +412,7 @@ export default function App() {
           <ul className="elig-list">
             <li>One account per person. Multi-accounting results in immediate disqualification.</li>
             <li>Kiotz reserves the right to disqualify accounts with suspicious wagering activity.</li>
-            <li>Prizes are non-transferable and not redeemable for cash outside of Stake.</li>
+            <li>Prizes are non-transferable and not redeemable for cash outside of Jack.</li>
             <li>This promotion is for entertainment purposes. Gamble responsibly. 18+</li>
           </ul>
         </div>
@@ -427,7 +427,7 @@ export default function App() {
           </div>
           <div className="footer-links">
             <a href="https://kick.com/kiotz9" target="_blank" rel="noreferrer">Kick</a>
-            <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer">Stake</a>
+            <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer">Jack</a>
           </div>
           <p className="footer-disclaimer">Gambling involves risk. Play responsibly. 18+ only.</p>
         </div>

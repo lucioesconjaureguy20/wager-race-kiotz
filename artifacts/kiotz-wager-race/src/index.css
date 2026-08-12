@@ -189,13 +189,13 @@ body {
   margin-bottom: 20px;
 }
 
-.stake-link {
+.jack-link {
   color: var(--green);
   text-decoration: none;
   font-weight: 500;
 }
 
-.stake-link:hover {
+.jack-link:hover {
   text-decoration: underline;
 }
 
