@@ -16,8 +16,8 @@ const TROPHY_COLORS: Record<number, string> = {
 };
 
 const PRIZES: Record<number, number> = {
-  1: 1250, 2: 750, 3: 400, 4: 250, 5: 150,
-  6: 100, 7: 50, 8: 25, 9: 15, 10: 10,
+  1: 2500, 2: 1500, 3: 800, 4: 500, 5: 300,
+  6: 200, 7: 100, 8: 50, 9: 30, 10: 20,
 };
 
 const PAGE_SIZE = 10;
