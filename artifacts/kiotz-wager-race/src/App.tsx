@@ -207,7 +207,7 @@ export default function App() {
               </li>
             ))}
           </ul>
-          <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer" className="nav-cta">
+          <a href="https://jack.social/Kiotz9" target="_blank" rel="noreferrer" className="nav-cta">
             Play on Jack
           </a>
         </div>
@@ -224,7 +224,7 @@ export default function App() {
             </h1>
             <p className="home-desc">
               Wager on{" "}
-              <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer" className="jack-link">
+              <a href="https://jack.social/Kiotz9" target="_blank" rel="noreferrer" className="jack-link">
                 Jack
               </a>{" "}
               using code{" "}
@@ -232,7 +232,7 @@ export default function App() {
               and climb the leaderboard to win your share of the prize pool.
             </p>
             <div className="home-actions">
-              <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer" className="btn-primary">
+              <a href="https://jack.social/Kiotz9" target="_blank" rel="noreferrer" className="btn-primary">
                 Register on Jack
               </a>
               <button className="btn-ghost" onClick={() => scrollTo("Leaderboard")}>
@@ -427,7 +427,7 @@ export default function App() {
           </div>
           <div className="footer-links">
             <a href="https://kick.com/kiotz9" target="_blank" rel="noreferrer">Kick</a>
-            <a href="https://stake.com/?c=KIOTZ9" target="_blank" rel="noreferrer">Jack</a>
+            <a href="https://jack.social/Kiotz9" target="_blank" rel="noreferrer">Jack</a>
           </div>
           <p className="footer-disclaimer">Gambling involves risk. Play responsibly. 18+ only.</p>
         </div>
