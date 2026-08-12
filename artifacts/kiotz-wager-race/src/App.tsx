@@ -16,8 +16,8 @@ const TROPHY_COLORS: Record<number, string> = {
 };
 
 const PRIZES: Record<number, number> = {
-  1: 2500, 2: 1500, 3: 800, 4: 500, 5: 300,
-  6: 200, 7: 100, 8: 50, 9: 30, 10: 20,
+  1: 1250, 2: 750, 3: 400, 4: 250, 5: 150,
+  6: 100, 7: 50, 8: 25, 9: 15, 10: 10,
 };
 
 const PAGE_SIZE = 10;
@@ -38,19 +38,19 @@ const RACE_END = new Date("2026-07-01T00:00:00Z");
 
 // Real wager targets per rank — same distribution as reference leaderboard
 const RANK_TARGETS: number[] = [
-  455_000, 436_500, 397_500,
-  126_112, 42_971, 37_121, 25_183, 17_618,
-   14_655, 14_581,  9_719,  9_389,  6_908,
-    6_776,  6_561,  4_890,  4_651,  3_426,
-    3_379,  3_280,  3_271,  3_162,  2_999,
-    2_940,  2_508,  2_239,  1_958,  1_911,
-  1_790, 1_668, 1_547,
-  1_426, 1_397, 1_382, 1_326, 1_248,
-  1_221, 1_205, 1_101, 1_046,   960,
-    782,   774,   733,   639,   617,
-    603,   574,   557,   549,   513,
-    488,   485,   431,   423,   402, 352,
-  ...Array.from({ length: 43 }, (_, i) => Math.round(352 * Math.pow(0.9477, i + 1))),
+  227_500, 218_250, 198_750,
+  63_056, 21_486, 18_561, 12_592, 8_809,
+   7_328,  7_291,  4_860,  4_695,  3_454,
+   3_388,  3_281,  2_445,  2_326,  1_713,
+   1_690,  1_640,  1_636,  1_581,  1_500,
+   1_470,  1_254,  1_120,    979,    956,
+   895, 834, 774,
+   713, 699, 691, 663, 624,
+   611, 603, 551, 523, 480,
+   391, 387, 367, 320, 309,
+   302, 287, 279, 275, 257,
+   244, 243, 216, 212, 201, 176,
+  ...Array.from({ length: 43 }, (_, i) => Math.round(176 * Math.pow(0.9477, i + 1))),
 ];
 
 const TICK_MS = 5 * 60 * 1000;
@@ -243,7 +243,7 @@ export default function App() {
           <div className="home-right">
             <div className="prize-card">
               <div className="prize-card-label">TOTAL PRIZE POOL</div>
-              <div className="prize-card-amount">$6,000</div>
+              <div className="prize-card-amount">$3,000</div>
               <div className="prize-card-divider" />
               <div className="prize-card-meta">
                 <div className="prize-meta-item">
@@ -264,7 +264,7 @@ export default function App() {
         </div>
 
         <div className="countdown-wrap">
-          <div className="countdown-label">RACE ENDS IN</div>
+          <div className="countdown-label">RACE ENDED</div>
           <div className="countdown">
             {[{ v: d, l: "Days" }, { v: h, l: "Hours" }, { v: m, l: "Min" }, { v: s, l: "Sec" }].map(({ v, l }, i) => (
               <div key={l} className="cd-group">
