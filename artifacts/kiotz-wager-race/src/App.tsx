@@ -243,7 +243,7 @@ export default function App() {
           <div className="home-right">
             <div className="prize-card">
               <div className="prize-card-label">TOTAL PRIZE POOL</div>
-              <div className="prize-card-amount">$3,000</div>
+              <div className="prize-card-amount">$6,000</div>
               <div className="prize-card-divider" />
               <div className="prize-card-meta">
                 <div className="prize-meta-item">
